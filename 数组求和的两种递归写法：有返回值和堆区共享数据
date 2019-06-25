@@ -1,0 +1,30 @@
+func main(){
+	arr := []int{1,9,5,3,4,8}
+	total := 0
+	fmt.Println(add(arr ,0))
+	sum(arr,0,&total)
+	fmt.Println("total:",total)
+}
+//各个递归栈之间通过 堆区的数据total共享数据
+//父递归不依赖子递归的结果，父递归只需要把数据缩小之后传给自递归，并把堆区的地址tatal告诉子递归
+//--父递归虽然不依赖子递归返回的结果，但是父递归必须等待子递归完成他才能结束，所有递归函数都是如此
+func sum(arr []int,leftIndex int,total *int){
+	if leftIndex == len(arr)-1 {
+		*total += arr[leftIndex]
+		return
+	}else{
+		*total += arr[leftIndex]
+		sum(arr,leftIndex+1,total)
+	}
+}
+//各个递归栈之间不占用堆区数据，数据全部通过栈来传递
+//第一个递归调用函数把自己的数据压入栈，等着后面的函数的返回结果
+//第二个递归函数，操作和第一个相同，每一个递归函数，都依赖于子栈的执行结果
+//父递归依赖子递归
+func add(arr []int,leftIndex int) int{
+	if leftIndex==len(arr)-1 {
+		return arr[leftIndex]
+	}
+	sum := arr[leftIndex]+add(arr,leftIndex+1)
+	return sum
+}
